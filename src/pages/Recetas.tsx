@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Clock, Flame } from "lucide-react";
+import { ArrowLeft, Clock, Flame, Lock } from "lucide-react";
 import { BottomNavVIP } from "@/components/dashboard/BottomNavVIP";
+import { useVIP } from "@/contexts/VIPContext";
 
 // Recipe images
 import matchaGelatin from "@/assets/recipes/matcha-gelatin.jpg";
@@ -18,10 +19,20 @@ interface RecipeCardProps {
   calories: string;
   description: string;
   index: number;
+  isLocked?: boolean;
+  onLockedClick?: () => void;
 }
 
-const RecipeCard = ({ title, image, time, calories, description, index }: RecipeCardProps) => {
+const RecipeCard = ({ title, image, time, calories, description, index, isLocked, onLockedClick }: RecipeCardProps) => {
   const navigate = useNavigate();
+  
+  const handleClick = () => {
+    if (isLocked && onLockedClick) {
+      onLockedClick();
+    } else {
+      navigate("/gelatina");
+    }
+  };
   
   return (
     <motion.div
@@ -32,15 +43,15 @@ const RecipeCard = ({ title, image, time, calories, description, index }: Recipe
         delay: index * 0.08,
         ease: [0.25, 0.46, 0.45, 0.94]
       }}
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer flex flex-col"
-      onClick={() => navigate("/gelatina")}
+      className={`relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer flex flex-col ${isLocked ? 'grayscale-[30%]' : ''}`}
+      onClick={handleClick}
     >
       {/* Image Container - 45% of card height */}
       <div className="relative aspect-[4/3] overflow-hidden">
         <img 
           src={image} 
           alt={title} 
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${isLocked ? 'blur-[2px]' : ''}`}
         />
         
         {/* Status Pills */}
@@ -56,10 +67,33 @@ const RecipeCard = ({ title, image, time, calories, description, index }: Recipe
             <span className="text-[10px] font-semibold text-gray-700 font-body">{calories}</span>
           </div>
         </div>
+
+        {/* Lock Overlay */}
+        {isLocked && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="flex flex-col items-center gap-1"
+            >
+              <div 
+                className="p-3 rounded-full bg-gold/30 border border-gold/50"
+                style={{
+                  boxShadow: "0 0 20px rgba(218, 165, 32, 0.4)",
+                }}
+              >
+                <Lock className="w-5 h-5 text-gold" style={{
+                  filter: "drop-shadow(0 0 6px rgba(218, 165, 32, 0.8))",
+                }} />
+              </div>
+              <span className="text-[10px] font-heading font-bold text-gold">VIP</span>
+            </motion.div>
+          </div>
+        )}
       </div>
 
       {/* Content Area */}
-      <div className="p-4 flex flex-col flex-1">
+      <div className={`p-4 flex flex-col flex-1 ${isLocked ? 'opacity-60' : ''}`}>
         {/* Title - Poppins Bold */}
         <h3 className="text-lg font-bold text-[#1A1A1A] mb-1 font-heading leading-tight">
           {title}
@@ -73,10 +107,13 @@ const RecipeCard = ({ title, image, time, calories, description, index }: Recipe
         {/* Button - Fixed at bottom */}
         <motion.button
           whileTap={{ scale: 0.98 }}
-          className="w-full py-3 rounded-xl font-semibold text-sm text-[#1A1A1A] font-heading
-                     bg-[#FFB800] hover:brightness-95 transition-all duration-200"
+          className={`w-full py-3 rounded-xl font-semibold text-sm font-heading transition-all duration-200 ${
+            isLocked 
+              ? 'bg-gold/20 text-gold border border-gold/40' 
+              : 'bg-[#FFB800] text-[#1A1A1A] hover:brightness-95'
+          }`}
         >
-          Ver Receta
+          {isLocked ? 'Desbloquear VIP' : 'Ver Receta'}
         </motion.button>
       </div>
     </motion.div>
@@ -85,6 +122,7 @@ const RecipeCard = ({ title, image, time, calories, description, index }: Recipe
 
 const Recetas = () => {
   const navigate = useNavigate();
+  const { isVip, setShowUpsellModal } = useVIP();
 
   const handleNavigate = (item: "home" | "calculator" | "coach" | "challenges" | "recipes" | "profile") => {
     switch (item) {
@@ -114,42 +152,48 @@ const Recetas = () => {
       image: matchaGelatin,
       time: "10 min",
       calories: "85 kcal",
-      description: "Gelatina verde con té matcha y jengibre para activar el metabolismo"
+      description: "Gelatina verde con té matcha y jengibre para activar el metabolismo",
+      isLocked: false,
     },
     {
       title: "Saciante Pro",
       image: proteinGelatin,
       time: "15 min",
       calories: "120 kcal",
-      description: "Gelatina proteica con colágeno y semillas de chía para controlar el hambre"
+      description: "Gelatina proteica con colágeno y semillas de chía para controlar el hambre",
+      isLocked: false,
     },
     {
       title: "Detox Verde",
       image: detoxGelatin,
       time: "12 min",
       calories: "65 kcal",
-      description: "Gelatina de espinaca y manzana verde para desintoxicar naturalmente"
+      description: "Gelatina de espinaca y manzana verde para desintoxicar naturalmente",
+      isLocked: !isVip,
     },
     {
       title: "Sueño Profundo",
       image: sleepGelatin,
       time: "8 min",
       calories: "75 kcal",
-      description: "Gelatina de lavanda y manzanilla para un descanso reparador"
+      description: "Gelatina de lavanda y manzanilla para un descanso reparador",
+      isLocked: !isVip,
     },
     {
       title: "Energía Total",
       image: energyGelatin,
       time: "10 min",
       calories: "95 kcal",
-      description: "Gelatina de frutas rojas con guaraná para máxima vitalidad"
+      description: "Gelatina de frutas rojas con guaraná para máxima vitalidad",
+      isLocked: !isVip,
     },
     {
       title: "Antiinflamatorio",
       image: turmericGelatin,
       time: "12 min",
       calories: "70 kcal",
-      description: "Gelatina de cúrcuma y piña para reducir la inflamación"
+      description: "Gelatina de cúrcuma y piña para reducir la inflamación",
+      isLocked: !isVip,
     }
   ];
 
@@ -187,7 +231,12 @@ const Recetas = () => {
         <main className="flex-1 px-4 py-2">
           <div className="grid grid-cols-2 gap-4">
             {recipes.map((recipe, index) => (
-              <RecipeCard key={index} {...recipe} index={index} />
+              <RecipeCard 
+                key={index} 
+                {...recipe} 
+                index={index}
+                onLockedClick={() => setShowUpsellModal(true)}
+              />
             ))}
           </div>
         </main>
