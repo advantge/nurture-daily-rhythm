@@ -20,7 +20,7 @@ const navItems: NavItemData[] = [
   { id: "calculator", label: "Medidas", icon: Calculator },
   { id: "coach", label: "Coach", icon: MessageCircle },
   { id: "challenges", label: "Desafíos", icon: Trophy },
-  { id: "recipes", label: "Receitas", icon: ChefHat },
+  { id: "recipes", label: "Recetas", icon: ChefHat },
   { id: "profile", label: "Perfil", icon: User },
 ];
 
@@ -32,20 +32,16 @@ export const BottomNavVIP = ({ active, onNavigate }: BottomNavVIPProps) => {
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 left-0 right-0 bg-zinc-950/98 backdrop-blur-xl border-t border-zinc-800/60 px-2 pb-6 pt-2 z-50"
+      className="fixed bottom-0 left-0 right-0 nav-glass px-2 pb-6 pt-3 z-50"
     >
-      {/* Top spotlight glow line */}
+      {/* Top spotlight glow line - Enhanced */}
       <motion.div 
-        className="absolute top-0 h-[2px]"
+        className="absolute top-0 h-[3px] nav-glow-indicator"
         animate={{
-          left: `calc(${(activeIndex / navItems.length) * 100}% + ${100 / navItems.length / 2}% - 30px)`,
+          left: `calc(${(activeIndex / navItems.length) * 100}% + ${100 / navItems.length / 2}% - 35px)`,
         }}
         transition={{ type: "spring", stiffness: 400, damping: 35 }}
-        style={{
-          width: '60px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(202, 138, 4, 0.9) 50%, transparent 100%)',
-          boxShadow: '0 0 20px rgba(202, 138, 4, 0.6), 0 0 40px rgba(202, 138, 4, 0.3)',
-        }}
+        style={{ width: '70px' }}
       />
       
       <div className="max-w-md mx-auto flex items-center justify-around relative">
@@ -53,12 +49,12 @@ export const BottomNavVIP = ({ active, onNavigate }: BottomNavVIPProps) => {
         <motion.div 
           className="absolute h-full pointer-events-none"
           animate={{
-            left: `calc(${(activeIndex / navItems.length) * 100}% + ${100 / navItems.length / 2}% - 40px)`,
+            left: `calc(${(activeIndex / navItems.length) * 100}% + ${100 / navItems.length / 2}% - 45px)`,
           }}
           transition={{ type: "spring", stiffness: 400, damping: 35 }}
           style={{
-            width: '80px',
-            background: 'radial-gradient(ellipse at center top, rgba(202, 138, 4, 0.15) 0%, transparent 70%)',
+            width: '90px',
+            background: 'radial-gradient(ellipse at center top, rgba(218, 165, 32, 0.2) 0%, transparent 70%)',
           }}
         />
 
@@ -80,26 +76,26 @@ export const BottomNavVIP = ({ active, onNavigate }: BottomNavVIPProps) => {
                 className="absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none"
                 style={{
                   background: isActive 
-                    ? 'radial-gradient(ellipse at center, rgba(202, 138, 4, 0.25) 0%, rgba(202, 138, 4, 0.08) 50%, transparent 70%)'
-                    : `radial-gradient(ellipse at center, rgba(202, 138, 4, ${0.06 * proximityGlow}) 0%, transparent 60%)`,
+                    ? 'radial-gradient(ellipse at center, rgba(218, 165, 32, 0.3) 0%, rgba(218, 165, 32, 0.1) 50%, transparent 70%)'
+                    : `radial-gradient(ellipse at center, rgba(218, 165, 32, ${0.08 * proximityGlow}) 0%, transparent 60%)`,
                 }}
               />
               
-              {/* Active border frame with glow */}
+              {/* Active border frame with enhanced glow */}
               {isActive && (
                 <motion.div
                   layoutId="nav-spotlight-border"
-                  className="absolute inset-1 rounded-xl border-2 border-yellow-500/90"
+                  className="absolute inset-1 rounded-xl border-2 border-yellow-500"
                   style={{
-                    boxShadow: '0 0 20px rgba(202, 138, 4, 0.5), 0 0 40px rgba(202, 138, 4, 0.2), inset 0 0 20px rgba(202, 138, 4, 0.1)',
+                    boxShadow: '0 0 24px rgba(218, 165, 32, 0.6), 0 0 48px rgba(218, 165, 32, 0.3), inset 0 0 24px rgba(218, 165, 32, 0.15)',
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               )}
               
-              {/* Icon */}
+              {/* Icon with glow effect */}
               <motion.div
-                animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+                animate={isActive ? { scale: 1.1 } : { scale: 1 }}
                 className="relative z-10"
               >
                 <Icon 
@@ -110,18 +106,21 @@ export const BottomNavVIP = ({ active, onNavigate }: BottomNavVIPProps) => {
                   }`}
                   strokeWidth={isActive ? 2.5 : 2}
                   style={isActive ? {
-                    filter: 'drop-shadow(0 0 8px rgba(250, 204, 21, 0.7))',
+                    filter: 'drop-shadow(0 0 10px rgba(250, 204, 21, 0.8)) drop-shadow(0 0 20px rgba(250, 204, 21, 0.4))',
                   } : undefined}
                 />
               </motion.div>
               
-              {/* Label */}
+              {/* Label with font-body */}
               <span 
-                className={`text-[10px] font-medium relative z-10 transition-all duration-300 ${
+                className={`text-[10px] font-body font-medium relative z-10 transition-all duration-300 ${
                   isActive 
-                    ? 'text-yellow-400' 
+                    ? 'text-yellow-400 font-semibold' 
                     : 'text-zinc-500'
                 }`}
+                style={isActive ? {
+                  textShadow: '0 0 8px rgba(250, 204, 21, 0.5)',
+                } : undefined}
               >
                 {item.label}
               </span>
