@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Calculator, MessageCircle, Trophy } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { VIPHeader } from "@/components/dashboard/VIPHeader";
@@ -75,7 +75,8 @@ const Dashboard = () => {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full"
+          className="w-10 h-10 border-3 border-gold border-t-transparent rounded-full"
+          style={{ borderWidth: '3px' }}
         />
       </div>
     );
@@ -84,7 +85,13 @@ const Dashboard = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col pb-28">
-        <div className="w-full max-w-md mx-auto flex flex-col flex-1">
+        {/* Background gradient enhancement */}
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gold/5 rounded-full blur-[100px]" />
+          <div className="absolute bottom-1/4 right-0 w-[300px] h-[300px] bg-gold/3 rounded-full blur-[80px]" />
+        </div>
+
+        <div className="relative w-full max-w-md mx-auto flex flex-col flex-1">
           <VIPHeader userName={userName} />
 
           <main className="flex-1 flex flex-col gap-4 px-5">

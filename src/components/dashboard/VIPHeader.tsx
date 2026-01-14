@@ -14,25 +14,30 @@ export const VIPHeader = ({ userName }: VIPHeaderProps) => {
       className="px-6 pt-8 pb-6"
     >
       <div className="flex items-center gap-4 mb-4">
-        <motion.img
-          src={logo}
-          alt="Gelatina Bariátrica"
-          className="w-16 h-16 object-contain"
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-        />
+        {/* Logo with glow effect */}
+        <motion.div className="relative">
+          <div className="absolute inset-0 rounded-full bg-gold/20 blur-xl" />
+          <motion.img
+            src={logo}
+            alt="Gelatina Bariátrica"
+            className="relative w-16 h-16 object-contain"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+          />
+        </motion.div>
+        
         <div>
-          <span className="text-sm font-medium text-primary uppercase tracking-wider">
+          <span className="text-sm font-body font-medium text-primary uppercase tracking-wider">
             Gelatina Bariátrica
           </span>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-heading font-bold">
             <span className="text-card-foreground">Olá, </span>
             <span className="text-gold-gradient text-glow">{userName}</span>
           </h1>
         </div>
       </div>
       
-      <p className="text-muted-foreground text-sm">
+      <p className="font-body text-muted-foreground text-sm">
         Sua jornada de bem-estar continua 💪
       </p>
     </motion.header>

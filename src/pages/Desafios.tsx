@@ -253,7 +253,12 @@ const Desafios = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col pb-28">
-        <div className="w-full max-w-md mx-auto flex flex-col flex-1 px-5 pt-8">
+        {/* Background gradient enhancement */}
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gold/5 rounded-full blur-[100px]" />
+        </div>
+
+        <div className="relative w-full max-w-md mx-auto flex flex-col flex-1 px-5 pt-8">
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
             <button
@@ -262,10 +267,13 @@ const Desafios = () => {
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
-            <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
+            <motion.div className="relative">
+              <div className="absolute inset-0 rounded-full bg-gold/20 blur-lg" />
+              <img src={logo} alt="Logo" className="relative w-10 h-10 object-contain" />
+            </motion.div>
             <div>
-              <h1 className="text-2xl font-bold text-card-foreground">Desafios Mensais</h1>
-              <p className="text-muted-foreground text-sm">Complete desafios e ganhe recompensas</p>
+              <h1 className="text-2xl font-heading font-bold text-card-foreground">Desafios Mensais</h1>
+              <p className="font-body text-muted-foreground text-sm">Complete desafios e ganhe recompensas</p>
             </div>
           </div>
 
@@ -277,20 +285,21 @@ const Desafios = () => {
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-primary/15">
-                  <Trophy className="w-6 h-6 text-primary" />
+                <div className="relative p-3 rounded-xl bg-primary/15">
+                  <div className="absolute inset-0 rounded-xl bg-gold/10 blur-md" />
+                  <Trophy className="relative w-6 h-6 text-primary icon-glow" />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Progresso Total</p>
-                  <p className="text-2xl font-bold text-card-foreground">{overallPercent}%</p>
+                  <p className="text-sm font-body text-muted-foreground">Progresso Total</p>
+                  <p className="text-2xl font-heading font-bold text-card-foreground">{overallPercent}%</p>
                 </div>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2 text-primary">
-                  <Flame className="w-5 h-5" />
-                  <span className="font-bold">{activeStreaks}</span>
+                  <Flame className="w-5 h-5 icon-glow" />
+                  <span className="font-heading font-bold">{activeStreaks}</span>
                 </div>
-                <p className="text-xs text-muted-foreground">Sequências ativas</p>
+                <p className="text-xs font-body text-muted-foreground">Sequências ativas</p>
               </div>
             </div>
             <div className="h-3 bg-secondary rounded-full overflow-hidden">
@@ -301,6 +310,9 @@ const Desafios = () => {
                 className="h-full progress-gold rounded-full"
               />
             </div>
+            <p className="text-xs font-body text-muted-foreground mt-2 text-center">
+              {totalProgress} de {totalDays} dias completados
+            </p>
           </motion.div>
 
           {/* Filter Tabs */}
@@ -313,9 +325,9 @@ const Desafios = () => {
               <button
                 key={key}
                 onClick={() => setFilter(key as typeof filter)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body font-medium transition-all ${
                   filter === key
-                    ? "bg-primary text-primary-foreground shadow-lg"
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-gold/20"
                     : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
                 }`}
               >
@@ -341,8 +353,8 @@ const Desafios = () => {
               className="flex flex-col items-center justify-center py-12 text-center"
             >
               <Calendar className="w-16 h-16 text-muted-foreground/30 mb-4" />
-              <p className="text-muted-foreground">Nenhum desafio encontrado</p>
-              <p className="text-sm text-muted-foreground/70">Tente mudar o filtro</p>
+              <p className="font-body text-muted-foreground">Nenhum desafio encontrado</p>
+              <p className="text-sm font-body text-muted-foreground/70">Tente mudar o filtro</p>
             </motion.div>
           ) : (
             <div className="space-y-4">
@@ -363,12 +375,12 @@ const Desafios = () => {
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: index * 0.05 }}
                       className={`glass-card rounded-card p-5 ${
-                        isFullyCompleted ? "border-2 border-green-500/30" : ""
+                        isFullyCompleted ? "border-2 border-green-500/40" : ""
                       }`}
                     >
                       <div className="flex items-start gap-4">
                         <motion.div 
-                          className={`p-3 rounded-xl ${
+                          className={`relative p-3 rounded-xl ${
                             isFullyCompleted 
                               ? "bg-green-500/20" 
                               : "bg-primary/15"
@@ -376,54 +388,64 @@ const Desafios = () => {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
                         >
+                          {isFullyCompleted && (
+                            <div className="absolute inset-0 rounded-xl bg-green-500/20 blur-md" />
+                          )}
+                          {!isFullyCompleted && (
+                            <div className="absolute inset-0 rounded-xl bg-gold/10 blur-md" />
+                          )}
                           {isFullyCompleted ? (
-                            <Trophy className="w-6 h-6 text-green-400" />
+                            <Trophy className="relative w-6 h-6 text-green-400" />
                           ) : (
-                            <Icon className={`w-6 h-6 ${completedToday ? "text-green-400" : "text-primary"}`} />
+                            <Icon className={`relative w-6 h-6 ${completedToday ? "text-green-400" : "text-primary icon-glow"}`} />
                           )}
                         </motion.div>
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-card-foreground">{challenge.title}</h3>
+                            <h3 className="font-heading font-semibold text-card-foreground">{challenge.title}</h3>
                             {isFullyCompleted && (
-                              <span className="px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-xs font-medium">
+                              <span className="px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-xs font-body font-medium">
                                 Concluído
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground mb-3">{challenge.description}</p>
+                          <p className="text-sm font-body text-muted-foreground mb-3">{challenge.description}</p>
 
-                          {/* Progress Bar */}
+                          {/* Enhanced Progress Bar */}
                           <div className="mb-3">
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-card-foreground font-medium">
+                            <div className="flex justify-between text-xs mb-1.5">
+                              <span className="font-body text-card-foreground font-medium">
                                 {progress}/{challenge.duration_days} dias
                               </span>
-                              <span className="text-primary font-bold">{Math.round(progressPercent)}%</span>
+                              <span className={`font-heading font-bold ${
+                                isFullyCompleted ? "text-green-400" : "text-primary"
+                              }`}>
+                                {Math.round(progressPercent)}%
+                              </span>
                             </div>
-                            <div className="h-2.5 bg-secondary rounded-full overflow-hidden">
+                            <div className="h-3 bg-secondary rounded-full overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progressPercent}%` }}
                                 transition={{ duration: 0.5, delay: index * 0.05 + 0.2 }}
                                 className={`h-full rounded-full ${
                                   isFullyCompleted 
-                                    ? "bg-green-500" 
+                                    ? "progress-success" 
                                     : "progress-gold"
                                 }`}
                               />
                             </div>
                           </div>
 
-                          {/* Complete Button */}
+                          {/* Complete Button with state changes */}
                           {!isFullyCompleted && (
                             <Button
                               onClick={() => handleComplete(challenge.id)}
                               disabled={completedToday || completing === challenge.id}
-                              className={`w-full h-11 font-semibold text-sm ${
+                              className={`w-full h-12 font-heading font-semibold text-sm transition-all ${
                                 completedToday
-                                  ? "bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/25"
+                                  ? "bg-green-500/20 text-green-400 border border-green-500/40 hover:bg-green-500/25"
                                   : "btn-gold text-primary-foreground"
                               }`}
                             >
@@ -434,10 +456,20 @@ const Desafios = () => {
                                   className="w-5 h-5 border-2 border-current border-t-transparent rounded-full"
                                 />
                               ) : completedToday ? (
-                                <>
-                                  <Check className="w-5 h-5 mr-2" />
-                                  Feito hoje!
-                                </>
+                                <motion.div 
+                                  className="flex items-center gap-2"
+                                  initial={{ scale: 0.8 }}
+                                  animate={{ scale: 1 }}
+                                >
+                                  <Check className="w-5 h-5" />
+                                  <span>Feito hoje!</span>
+                                  <motion.span
+                                    animate={{ rotate: [0, 10, -10, 0] }}
+                                    transition={{ duration: 0.5, delay: 0.2 }}
+                                  >
+                                    ✨
+                                  </motion.span>
+                                </motion.div>
                               ) : (
                                 <>
                                   <Target className="w-5 h-5 mr-2" />
@@ -448,10 +480,20 @@ const Desafios = () => {
                           )}
 
                           {isFullyCompleted && (
-                            <div className="flex items-center justify-center gap-2 py-3 text-green-400">
+                            <motion.div 
+                              className="flex items-center justify-center gap-2 py-3 text-green-400"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                            >
                               <Trophy className="w-5 h-5" />
-                              <span className="font-semibold">Desafio Concluído! 🎉</span>
-                            </div>
+                              <span className="font-heading font-semibold">Desafio Concluído!</span>
+                              <motion.span
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 1, repeat: Infinity }}
+                              >
+                                🎉
+                              </motion.span>
+                            </motion.div>
                           )}
                         </div>
                       </div>
@@ -469,6 +511,7 @@ const Desafios = () => {
             if (item === "home") navigate("/dashboard");
             else if (item === "calculator") navigate("/calculadora");
             else if (item === "coach") navigate("/coach");
+            else if (item === "recipes") navigate("/recetas");
           }}
         />
       </div>
