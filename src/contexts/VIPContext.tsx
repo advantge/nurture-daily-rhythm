@@ -6,6 +6,7 @@ interface VIPContextType {
   setIsVip: (value: boolean) => void;
   showUpsellModal: boolean;
   setShowUpsellModal: (value: boolean) => void;
+  refreshVIPStatus: () => Promise<void>;
 }
 
 const VIPContext = createContext<VIPContextType | undefined>(undefined);
@@ -14,12 +15,48 @@ export const VIPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isVip, setIsVip] = useState(false);
   const [showUpsellModal, setShowUpsellModal] = useState(false);
 
-  useEffect(() => {
-    // Check VIP status from localStorage (simulated for now)
-    const vipStatus = localStorage.getItem('isVip');
-    if (vipStatus === 'true') {
-      setIsVip(true);
+  const refreshVIPStatus = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setIsVip(false);
+        localStorage.removeItem('isVip');
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_vip')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (profile?.is_vip) {
+        setIsVip(true);
+        localStorage.setItem('isVip', 'true');
+      } else {
+        // Check localStorage as fallback (for simulated VIP during development)
+        const localVip = localStorage.getItem('isVip');
+        setIsVip(localVip === 'true');
+      }
+    } catch (error) {
+      console.error('Error fetching VIP status:', error);
+      // Fallback to localStorage
+      const localVip = localStorage.getItem('isVip');
+      setIsVip(localVip === 'true');
     }
+  };
+
+  useEffect(() => {
+    refreshVIPStatus();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      refreshVIPStatus();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -27,7 +64,7 @@ export const VIPProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [isVip]);
 
   return (
-    <VIPContext.Provider value={{ isVip, setIsVip, showUpsellModal, setShowUpsellModal }}>
+    <VIPContext.Provider value={{ isVip, setIsVip, showUpsellModal, setShowUpsellModal, refreshVIPStatus }}>
       {children}
     </VIPContext.Provider>
   );
