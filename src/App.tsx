@@ -15,6 +15,7 @@ import Recetas from "./pages/Recetas";
 import Progreso from "./pages/Progreso";
 import GelatinaDia from "./pages/GelatinaDia";
 import Perfil from "./pages/Perfil";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/progreso" element={<Progreso />} />
               <Route path="/gelatina" element={<GelatinaDia />} />
               <Route path="/perfil" element={<Perfil />} />
+              <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
