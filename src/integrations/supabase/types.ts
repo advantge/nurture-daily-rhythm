@@ -83,24 +83,33 @@ export type Database = {
           created_at: string
           first_name: string | null
           id: string
+          is_vip: boolean | null
+          payment_email: string | null
           updated_at: string
           user_id: string
+          vip_purchased_at: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           first_name?: string | null
           id?: string
+          is_vip?: boolean | null
+          payment_email?: string | null
           updated_at?: string
           user_id: string
+          vip_purchased_at?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           first_name?: string | null
           id?: string
+          is_vip?: boolean | null
+          payment_email?: string | null
           updated_at?: string
           user_id?: string
+          vip_purchased_at?: string | null
         }
         Relationships: []
       }
